@@ -5,6 +5,7 @@ import cn.tedu.order.feign.AccountClient;
 import cn.tedu.order.feign.EasyIdGeneratorClient;
 import cn.tedu.order.feign.StorageClient;
 import cn.tedu.order.mapper.OrderMapper;
+import io.seata.spring.annotation.GlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,14 +28,15 @@ public class OrderServiceImpl implements OrderService{
     @Autowired
     private AccountClient accountClient;
     @Override
+    @GlobalTransactional
     public void create(Order order) {
-        //TODO:从全局唯一ID发号器获取id 这里随机产生一个ORDERID
         Long orderId = easyIdGeneratorClient.nextId("order_business");
         order.setId(orderId);
         orderMapper.create(order);
-        //TODO:调用storage 修改库存
+//        if (Math.random() < 0.5) {
+//            throw new RuntimeException("模拟异常");
+//        }
         storageClient.decrease(order.getProductId(),order.getCount());
-        //TODO:调用account 修改账户余额
         accountClient.decrease(order.getUserId(),order.getMoney());
     }
 }

@@ -1,13 +1,16 @@
-
 spring:
   application:
     name: storage
-
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost/seata_storage?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
     username: root
     password: root
+
+  cloud:
+    alibaba:
+      seata:
+        tx-service-group: order_tx_group
 
 server:
   port: 8082
@@ -22,7 +25,7 @@ eureka:
 mybatis-plus:
   type-aliases-package: cn.tedu.storage.entity
   mapper-locations:
-    - classpath:mapper/*Mapper.xml
+    - classpath:/mapper/*Mapper.xml
   configuration:
     map-underscore-to-camel-case: true
 
